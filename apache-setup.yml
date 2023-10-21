@@ -1,0 +1,24 @@
+- name: setting up appache webserver on amazon clients
+  hosts:  ubuntun-client
+
+  tasks:
+    - name: update  all packages # equivalent to yum update -y
+      ansible.builtin.yum:
+        name: '*' # should that mean we want to update any single packages
+        state: latest
+    - name: Install Apache # equivalent to yum install -y httpd
+      ansible.builtin.yum:
+        name: httpd
+        state: present
+    - name: Start service httpd, if not started # systemctl httpd# systemctl httpd
+      ansible.builtin.service:
+        name: httpd
+        state: started
+    - name: Start service httpd on boot # systemctl enable httpd
+      ansible.builtin.service: #service module
+        name: httpd
+        enabled: true
+    - name: Copy index.html file from the controller to the target hosts 
+      ansible.builtin.copy: # service module
+        src: /home/ubuntu/index.html #controller
+        dest: /var/www/html  # target server (clients)    
